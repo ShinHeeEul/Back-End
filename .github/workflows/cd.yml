@@ -42,5 +42,6 @@ jobs:
           key: ${{ secrets.WAS_KEY }}
           port: 22
           script: |
+            source ~/.bashrc
             nohup java -jar /home/${{ secrets.WAS_USERNAME }}/build/libs/ZoozooClub-0.0.1-SNAPSHOT.jar > mylog.log 2>&1 &
 
