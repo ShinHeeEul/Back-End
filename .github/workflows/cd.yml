@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-jar
-          path: build/libs/*.jar  # 빌드된 JAR 파일 경로
+          path: build/libs/ZoozooClub-0.0.1-SNAPSHOT.jar
 
       - name: Download JAR file artifact
         uses: actions/download-artifact@v3
