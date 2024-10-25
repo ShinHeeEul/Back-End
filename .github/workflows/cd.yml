@@ -39,7 +39,7 @@ jobs:
       - name: Jar 파일 복사중
         run: |
           scp -P ${{ secrets.WAS_SSH_PORT }} -i ${{ secrets.WAS_KEY }} \
-          ./build/libs/*.jar ${{ secrets.WAS_USERNAME }}@${{ secrets.WAS_HOST }}:/home/ubuntu/app.jar
+          ./build/libs/ZoozooClub-0.0.1-SNAPSHOT.jar ${{ secrets.WAS_USERNAME }}@${{ secrets.WAS_HOST }}:/home/ubuntu/app.jar
 
       - name: Jar 파일 실행중
         uses: appleboy/ssh-action@master
