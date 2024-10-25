@@ -18,30 +18,23 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: 권한 부여
+      - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: 테스트 없이 빌드
+      - name: Build with Gradle (without Test)
         run: ./gradlew clean build -x test --stacktrace
 
-      - name: Upload JAR file as artifact
-        uses: actions/upload-artifact@v3
+      - name: Copy files via SSH
+        uses: appleboy/scp-action@master
         with:
-          name: app-jar
-          path: build/libs/ZoozooClub-0.0.1-SNAPSHOT.jar
+          host: ${{ secrets.WAS_HOST }}
+          username: ${{ secrets.WAS_USERNAME }}
+          key: ${{ secrets.WAS_KEY }}
+          port: 22
+          source: "./build/libs/ZoozooClub-0.0.1-SNAPSHOT.jar"
+          target: "/home/ubuntu/"
 
-      - name: Download JAR file artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: app-jar
-          path: ./  # 다운로드할 위치
-          
-      - name: Jar 파일 복사중
-        run: |
-          scp -P ${{ secrets.WAS_SSH_PORT }} -i ${{ secrets.WAS_KEY }} \
-          ./build/libs/ZoozooClub-0.0.1-SNAPSHOT.jar ${{ secrets.WAS_USERNAME }}@${{ secrets.WAS_HOST }}:/home/ubuntu/app.jar
-
-      - name: Jar 파일 실행중
+      - name: Deploy JAR on remote server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.WAS_HOST }}
@@ -49,5 +42,5 @@ jobs:
           key: ${{ secrets.WAS_KEY }}
           port: ${{ secrets.WAS_SSH_PORT }}
           script: |
-            pkill -f 'java -jar' || true
-            nohup java -jar /home/ubuntu/app.jar > mylog.log 2>&1 & 
+            pkill -f 'java -jar' || true  # 기존에 실행 중인 JAR 프로세스 종료
+            nohup java -jar /home/${{ secrets.WAS_USERNAME }}/app.jar > /dev/null 2>&1 &
