@@ -3,7 +3,7 @@ name: Java CD with Gradle
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   deploy:
@@ -32,7 +32,7 @@ jobs:
           key: ${{ secrets.WAS_KEY }}
           port: 22
           source: "./build/libs/ZoozooClub-0.0.1-SNAPSHOT.jar"
-          target: "/home/ubuntu/"
+          target: "/home/${{ secrets.WAS_USERNAME }}"
 
       - name: Deploy JAR on remote server
         uses: appleboy/ssh-action@master
@@ -43,4 +43,4 @@ jobs:
           port: ${{ secrets.WAS_SSH_PORT }}
           script: |
             pkill -f 'java -jar' || true  # 기존에 실행 중인 JAR 프로세스 종료
-            nohup java -jar /home/${{ secrets.WAS_USERNAME }}/app.jar > /dev/null 2>&1 &
+            nohup java -jar /home/${{ secrets.WAS_USERNAME }}/ZoozooClub-0.0.1-SNAPSHOT.jar > mylog.log 2>&1 &
