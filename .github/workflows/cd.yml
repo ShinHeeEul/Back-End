@@ -30,9 +30,9 @@ jobs:
           host: ${{ secrets.WAS_HOST }}
           username: ${{ secrets.WAS_USERNAME }}
           key: ${{ secrets.WAS_KEY }}
-          port: ${{ secrets.WAS_SSH_PORT }}
+          port: 22
           source: "./build/libs/ZoozooClub-0.0.1-SNAPSHOT.jar"
-          target: "/home/${{ secrets.WAS_USERNAME }}"
+          target: "/home/${{ secrets.WAS_USERNAME }}/test"
 
       - name: Deploy JAR on remote server
         uses: appleboy/ssh-action@master
@@ -40,7 +40,7 @@ jobs:
           host: ${{ secrets.WAS_HOST }}
           username: ${{ secrets.WAS_USERNAME }}
           key: ${{ secrets.WAS_KEY }}
-          port: ${{ secrets.WAS_SSH_PORT }}
+          port: 22
           script: |
             pkill -f 'java -jar' || true  # 기존에 실행 중인 JAR 프로세스 종료
             nohup java -jar /home/${{ secrets.WAS_USERNAME }}/ZoozooClub-0.0.1-SNAPSHOT.jar > mylog.log 2>1&
