@@ -38,7 +38,7 @@ jobs:
           host: ${{ secrets.WAS_HOST }}
           username: ${{ secrets.WAS_USERNAME }}
           key: ${{ secrets.WAS_KEY }}
-          port: 22
+          port: ${{ secrets.WAS_SSH_PORT }}
           source: "."
           target: "/home/${{ secrets.WAS_USERNAME }}"
 
@@ -48,6 +48,8 @@ jobs:
           host: ${{ secrets.WAS_HOST }}
           username: ${{ secrets.WAS_USERNAME }}
           key: ${{ secrets.WAS_KEY }}
-          port: 22
+          port: ${{ secrets.WAS_SSH_PORT }}
+          debug: true
           script: |
+		kill -9 $(lsof -t -i:${{ secrets.PORT }} )
             nohup java -jar /home/${{ secrets.WAS_USERNAME }}/build/libs/ZoozooClub-0.0.1-SNAPSHOT.jar > mylog.log 2>&1 &
